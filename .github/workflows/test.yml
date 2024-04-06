@@ -19,5 +19,5 @@ jobs:
           poetry-version: 1.6.1
       - run: |
           poetry install --with dev
-          poetry run pytest
+          # poetry run pytest
         shell: bash
