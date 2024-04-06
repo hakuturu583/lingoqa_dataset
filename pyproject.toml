@@ -1,9 +1,11 @@
 [tool.poetry]
 name = "lingoqa-dataset"
 version = "0.1.0"
-description = ""
+description = "LingoQA dataset for pytorch"
 authors = ["Masaya Kataoka <ms.kataoka@gmail.com>"]
 readme = "README.md"
+homepage = "https://github.com/hakuturu583"
+repository = "https://github.com/hakuturu583/lingoqa_dataset"
 
 
 [tool.poetry.dependencies]

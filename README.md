@@ -32,3 +32,7 @@ for data, question, answer in dataloader:
 - type: torch.Tuple(str)
 - size: batch_size
 - description : Answers in the batch.
+
+## Special thanks
+
+[LingoQA](https://github.com/wayveai/LingoQA) project from [wayve.](https://wayve.ai/)
