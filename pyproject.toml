@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.10"
 gdown = "^5.1.0"
 torch = "^2.0.0"
+pandas = "^2.2.1"
 
 
 [tool.poetry.group.dev.dependencies]
