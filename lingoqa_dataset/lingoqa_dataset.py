@@ -122,12 +122,4 @@ class LingoQADataset(Dataset):
 
 
 if __name__ == "__main__":
-    import torchvision.transforms as transforms
-    from torch.utils.data import DataLoader
-
-    dataset = LingoQADataset(
-        DatasetType.EVALUATION, transforms=transforms.Resize((256, 512))
-    )
-    dataloader = DataLoader(dataset=dataset, batch_size=3, shuffle=True)
-    for data, question, answer in dataloader:
-        pass
+    pass
