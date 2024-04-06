@@ -3,7 +3,7 @@ import zipfile
 from abc import ABC
 from enum import Enum
 from pathlib import Path
-from typing import List, Tuple
+from typing import Any, List, Optional, Tuple
 
 import gdown
 import pandas as pd
@@ -49,8 +49,10 @@ class LingoQADataset(Dataset):
     lingoqa_dataset_root_dir: Path
     dataset_info: DatasetInfo
     database: pd.DataFrame
+    transforms: Optional[Any] = None
 
-    def __init__(self, type: DatasetType, transforms: torch.transforms = None) -> None:
+    def __init__(self, type: DatasetType, transforms: Optional[Any] = None) -> None:
+        self.transforms = transforms
         if type == DatasetType.SCENARY:
             self.dataset_info = SceneryDatasetInfo()
         elif type == DatasetType.ACTION:
@@ -72,9 +74,12 @@ class LingoQADataset(Dataset):
     def __getitem__(self, index: int) -> Tuple[Tensor, str, str]:
         images_tensor: List[Tensor] = []
         for image_path in self.database.iloc[index].loc["images"]:
-            images_tensor.append(
-                read_image(str(self.lingoqa_dataset_root_dir.joinpath(image_path)))
+            image_tensor = read_image(
+                str(self.lingoqa_dataset_root_dir.joinpath(image_path))
             )
+            if self.transforms:
+                image_tensor = self.transforms(image_tensor)
+            images_tensor.append(image_tensor)
         return (
             torch.cat(images_tensor, dim=0),
             self.database.iloc[index].loc["question"],
@@ -117,9 +122,12 @@ class LingoQADataset(Dataset):
 
 
 if __name__ == "__main__":
+    import torchvision.transforms as transforms
     from torch.utils.data import DataLoader
 
-    dataset = LingoQADataset(DatasetType.EVALUATION)
+    dataset = LingoQADataset(
+        DatasetType.EVALUATION, transforms=transforms.Resize((256, 512))
+    )
     dataloader = DataLoader(dataset=dataset, batch_size=3, shuffle=True)
     for data, question, answer in dataloader:
         pass
