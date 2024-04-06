@@ -3,9 +3,12 @@ import zipfile
 from abc import ABC
 from enum import Enum
 from pathlib import Path
+from typing import Tuple
 
 import gdown
 import pandas as pd
+import torch
+from torch import Tensor
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
@@ -65,10 +68,26 @@ class LingoQADataset(Dataset):
         self.unzip_images()
         self.read_database()
 
+    def __getitem__(self, index: int) -> Tuple[Tensor, str, str]:
+        # print("========== Question ==========")
+        # print(self.database.iloc[index].loc["question"])
+        # print("========== Answer ==========")
+        # print(self.database.iloc[index].loc["answer"])
+        return (
+            torch.zeros(0),
+            self.database.iloc[index].loc["question"],
+            self.database.iloc[index].loc["answer"],
+        )
+
+    def __len__(self) -> int:
+        return len(self.database)
+
     def read_database(self):
         self.database = pd.read_parquet(
             self.lingoqa_dataset_root_dir.joinpath(self.dataset_info.parquet_filename)
         )
+        print("Loading dataset succeeded.")
+        print(self.database)
 
     def unzip_images(self):
         if not Path.exists(self.lingoqa_dataset_root_dir.joinpath("images")):
@@ -96,4 +115,9 @@ class LingoQADataset(Dataset):
 
 
 if __name__ == "__main__":
+    from torch.utils.data import DataLoader
+
     dataset = LingoQADataset(DatasetType.EVALUATION)
+    dataloader = DataLoader(dataset=dataset, batch_size=4, shuffle=True)
+    for data, question, answer in dataloader:
+        pass
