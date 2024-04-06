@@ -3,13 +3,14 @@ import zipfile
 from abc import ABC
 from enum import Enum
 from pathlib import Path
-from typing import Tuple
+from typing import List, Tuple
 
 import gdown
 import pandas as pd
 import torch
 from torch import Tensor
 from torch.utils.data import Dataset
+from torchvision.io import read_image
 from tqdm import tqdm
 
 
@@ -69,12 +70,13 @@ class LingoQADataset(Dataset):
         self.read_database()
 
     def __getitem__(self, index: int) -> Tuple[Tensor, str, str]:
-        # print("========== Question ==========")
-        # print(self.database.iloc[index].loc["question"])
-        # print("========== Answer ==========")
-        # print(self.database.iloc[index].loc["answer"])
+        images_tensor: List[Tensor] = []
+        for image_path in self.database.iloc[index].loc["images"]:
+            images_tensor.append(
+                read_image(str(self.lingoqa_dataset_root_dir.joinpath(image_path)))
+            )
         return (
-            torch.zeros(0),
+            torch.cat(images_tensor, dim=0),
             self.database.iloc[index].loc["question"],
             self.database.iloc[index].loc["answer"],
         )
@@ -118,6 +120,6 @@ if __name__ == "__main__":
     from torch.utils.data import DataLoader
 
     dataset = LingoQADataset(DatasetType.EVALUATION)
-    dataloader = DataLoader(dataset=dataset, batch_size=4, shuffle=True)
+    dataloader = DataLoader(dataset=dataset, batch_size=3, shuffle=True)
     for data, question, answer in dataloader:
         pass
