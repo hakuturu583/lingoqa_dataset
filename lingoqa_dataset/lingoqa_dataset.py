@@ -5,6 +5,7 @@ from enum import Enum
 from pathlib import Path
 
 import gdown
+import pandas as pd
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
@@ -43,6 +44,7 @@ class DatasetType(Enum):
 class LingoQADataset(Dataset):
     lingoqa_dataset_root_dir: Path
     dataset_info: DatasetInfo
+    database: pd.DataFrame
 
     def __init__(self, type: DatasetType) -> None:
         if type == DatasetType.SCENARY:
@@ -61,6 +63,12 @@ class LingoQADataset(Dataset):
         ).joinpath(self.dataset_info.save_directory)
         self.download()
         self.unzip_images()
+        self.read_database()
+
+    def read_database(self):
+        self.database = pd.read_parquet(
+            self.lingoqa_dataset_root_dir.joinpath(self.dataset_info.parquet_filename)
+        )
 
     def unzip_images(self):
         if not Path.exists(self.lingoqa_dataset_root_dir.joinpath("images")):
