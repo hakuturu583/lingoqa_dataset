@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "lingoqa-dataset"
+version = "0.1.0"
+description = ""
+authors = ["Masaya Kataoka <ms.kataoka@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+gdown = "^5.1.0"
+torch = "^2.0.0"
+
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.0.0"
+black = "^24.3.0"
+isort = "^5.13.2"
+mypy = "^1.9.0"
+pytest = "^8.1.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
