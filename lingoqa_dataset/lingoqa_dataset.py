@@ -1,10 +1,12 @@
 import os
+import zipfile
 from abc import ABC
 from enum import Enum
 from pathlib import Path
 
 import gdown
 from torch.utils.data import Dataset
+from tqdm import tqdm
 
 
 class DatasetInfo(ABC):
@@ -43,9 +45,6 @@ class LingoQADataset(Dataset):
     dataset_info: DatasetInfo
 
     def __init__(self, type: DatasetType) -> None:
-        self.lingoqa_dataset_root_dir = Path(
-            os.environ.get("LINGOQA_DATASET_ROOT_DIR", "/tmp/lingoqa_dataset")
-        )
         if type == DatasetType.SCENARY:
             self.dataset_info = SceneryDatasetInfo()
         elif type == DatasetType.ACTION:
@@ -57,7 +56,19 @@ class LingoQADataset(Dataset):
                 "Dataset type should be scenary/action/evaluation. \
                     Please check type of the dataset."
             )
+        self.lingoqa_dataset_root_dir = Path(
+            os.environ.get("LINGOQA_DATASET_ROOT_DIR", "/tmp/lingoqa_dataset")
+        ).joinpath(self.dataset_info.save_directory)
         self.download()
+        self.unzip_images()
+
+    def unzip_images(self):
+        if not Path.exists(self.lingoqa_dataset_root_dir.joinpath("images")):
+            with zipfile.ZipFile(
+                self.lingoqa_dataset_root_dir.joinpath(self.dataset_info.zip_filename)
+            ) as zf:
+                for member in tqdm(zf.infolist(), desc="Extracting "):
+                    zf.extract(member, self.lingoqa_dataset_root_dir)
 
     def dataset_downloaded(self) -> bool:
         return Path.exists(
