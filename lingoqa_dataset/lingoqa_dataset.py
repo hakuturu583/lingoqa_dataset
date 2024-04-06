@@ -50,7 +50,7 @@ class LingoQADataset(Dataset):
     dataset_info: DatasetInfo
     database: pd.DataFrame
 
-    def __init__(self, type: DatasetType) -> None:
+    def __init__(self, type: DatasetType, transforms: torch.transforms = None) -> None:
         if type == DatasetType.SCENARY:
             self.dataset_info = SceneryDatasetInfo()
         elif type == DatasetType.ACTION:
