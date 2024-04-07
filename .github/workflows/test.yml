@@ -19,5 +19,15 @@ jobs:
           poetry-version: 1.6.1
       - run: |
           poetry install --with dev
-          # poetry run pytest
+          pytest --cov=lingoqa_dataset --cov-report=xml
         shell: bash
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: pytest # optional
+          name: codecov-umbrella # optional
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: hakuturu583/lingoqa_dataset
