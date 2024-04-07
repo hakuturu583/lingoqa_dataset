@@ -1,5 +1,9 @@
 # LingoQA dataset for pytorch
 
+[![Test](https://github.com/hakuturu583/lingoqa_dataset/actions/workflows/test.yml/badge.svg)](https://github.com/hakuturu583/lingoqa_dataset/actions/workflows/test.yml)
+
+[![codecov](https://codecov.io/gh/hakuturu583/lingoqa_dataset/graph/badge.svg?token=WE0LoxY9g2)](https://codecov.io/gh/hakuturu583/lingoqa_dataset)
+
 ## How to use
 
 ```python
