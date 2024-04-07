@@ -18,7 +18,7 @@ jobs:
           poetry-version: 1.6.1
       - run: |
           poetry install --with dev
-          pytest --cov=lingoqa_dataset --cov-report=xml
+          poetry run pytest --cov=lingoqa_dataset --cov-report=xml
         shell: bash
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
