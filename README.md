@@ -3,7 +3,7 @@
 ## How to use
 
 ```python
-from lingoqa_dataset.dataset import LingoQADataset
+from lingoqa_dataset.lingoqa_dataset import LingoQADataset, DatasetType
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 
